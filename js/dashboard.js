@@ -33,7 +33,7 @@
     const modalBody = document.getElementById('modalBody');
     const modalFooter = document.getElementById('modalFooter');
     const modalClose = document.getElementById('modalClose');
-    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn2');
 
     // ============================================================
     // FUNCIONES PRINCIPALES
@@ -497,7 +497,7 @@
 
     // Cerrar modal
     modalClose.addEventListener('click', cerrarModal);
-    modalCloseBtn.addEventListener('click', cerrarModal);
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', cerrarModal);
     modal.addEventListener('click', function(e) {
         if (e.target === this) cerrarModal();
     });
