@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Financiera Astro · Créditos personales</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    
+    <!-- CSS propio -->
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <i class="material-icons">stars</i>
+            Financiera <span>Astro</span>
+        </div>
+        <button class="nav-cta" id="btnHeaderCta">
+            <i class="material-icons">credit_card</i> Solicitar crédito
+        </button>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Créditos que <span>impulsan</span> tu futuro</h1>
+            <p>
+                Financiera Astro te acompaña con préstamos personales ágiles, 
+                tasas competitivas y un proceso 100% digital. Tu sueño, nuestro motor.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+                <button class="btn-evaluar" id="btnHeroCta">
+                    <i class="material-icons">assessment</i> Solicitar crédito
+                </button>
+                <span class="bcra-badge">
+                    <i class="material-icons">verified</i> Consulta BCRA en tiempo real
+                </span>
+            </div>
+        </div>
+        <div class="hero-image"></div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features">
+        <div class="feature-card">
+            <i class="material-icons">bolt</i>
+            <h3>Respuesta rápida</h3>
+            <p>Evaluación crediticia en menos de 5 minutos.</p>
+        </div>
+        <div class="feature-card">
+            <i class="material-icons">security</i>
+            <h3>Datos protegidos</h3>
+            <p>Tu información está segura con cifrado de grado bancario.</p>
+        </div>
+        <div class="feature-card">
+            <i class="material-icons">trending_up</i>
+            <h3>Tasas justas</h3>
+            <p>Planes ajustados a tu realidad financiera.</p>
+        </div>
+        <div class="feature-card">
+            <i class="material-icons">account_balance</i>
+            <h3>Con respaldo BCRA</h3>
+            <p>Consultamos la Central de Deudores para evaluar tu perfil.</p>
+        </div>
+    </section>
+
+    <!-- FORMULARIO -->
+    <section class="form-section" id="formSection">
+        <h2><i class="material-icons">edit_note</i> Evaluación de crédito</h2>
+        <p class="sub">Completá los datos y te contactaremos a la brevedad con una pre-aprobación.</p>
+
+        <form id="creditoForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="material-icons">person</i> Nombre completo</label>
+                    <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="material-icons">email</i> Correo electrónico</label>
+                    <input type="email" id="email" placeholder="juan@ejemplo.com" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="material-icons">phone</i> Teléfono</label>
+                    <input type="tel" id="telefono" placeholder="+54 11 1234-5678" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="material-icons">badge</i> CUIL / CUIT (11 dígitos)</label>
+                    <input type="text" id="cuil" placeholder="20123456789" maxlength="11" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="material-icons">attach_money</i> Ingreso mensual neto (ARS)</label>
+                    <input type="number" id="ingreso" placeholder="Ej: 650000" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="material-icons">home</i> Gasto de alquiler / vivienda (ARS)</label>
+                    <input type="number" id="gastoVivienda" placeholder="Ej: 150000" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="material-icons">credit_card</i> Monto solicitado (ARS)</label>
+                    <input type="number" id="montoSolicitado" placeholder="Ej: 1000000" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="material-icons">calendar_today</i> Plazo (cuotas)</label>
+                    <select id="plazo">
+                        <option value="6">6 cuotas</option>
+                        <option value="12" selected>12 cuotas</option>
+                        <option value="18">18 cuotas</option>
+                        <option value="24">24 cuotas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="material-icons">receipt_long</i> Otros gastos mensuales (servicios, seguros, etc.)</label>
+                <input type="number" id="otrosGastos" placeholder="Ej: 80000" />
+            </div>
+
+            <button type="submit" class="btn-enviar" id="btnEnviar">
+                <i class="material-icons">send</i> Enviar solicitud
+            </button>
+        </form>
+
+        <div class="success-msg" id="successMsg">
+            <i class="material-icons" style="vertical-align:middle; margin-right:10px;">check_circle</i>
+            ¡Solicitud enviada! En breve recibirás un email con el resultado de la evaluación.
+        </div>
+        <div class="error-msg" id="errorMsg">
+            <i class="material-icons" style="vertical-align:middle; margin-right:10px;">error</i>
+            <span id="errorText">Error al enviar la solicitud.</span>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <span>&copy; 2025 Financiera Astro · Todos los derechos reservados</span>
+        <span class="credits">Solucion creada por David Ferreyra como ejemplo</span>
+    </footer>
+</div>
+
+<!-- JavaScript propio -->
+<script src="js/scripts.js"></script>
+
+</body>
+</html>
