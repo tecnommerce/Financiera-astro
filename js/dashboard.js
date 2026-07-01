@@ -87,38 +87,38 @@
         const capacidadPagoDisponible = capacidadPago * 0.3;
         if (capacidadPagoDisponible >= cuotaEstimada) {
             puntaje += 35;
-            detalles.push('✅ Capacidad de pago suficiente');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#2b6d47">check_circle</i> Capacidad de pago suficiente');
         } else if (capacidadPagoDisponible >= cuotaEstimada * 0.7) {
             puntaje += 20;
-            detalles.push('⚠️ Capacidad de pago ajustada');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#b8860b">warning</i> Capacidad de pago ajustada');
         } else {
             puntaje += 5;
-            detalles.push('❌ Capacidad de pago insuficiente');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#6d2b2b">cancel</i> Capacidad de pago insuficiente');
         }
 
         // 2. Relación deuda/ingreso
         const relacionDeuda = (monto / ingreso) * 100;
         if (relacionDeuda < 30) {
             puntaje += 25;
-            detalles.push('✅ Baja relación deuda/ingreso');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#2b6d47">check_circle</i> Baja relación deuda/ingreso');
         } else if (relacionDeuda < 50) {
             puntaje += 15;
-            detalles.push('⚠️ Relación deuda/ingreso media');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#b8860b">warning</i> Relación deuda/ingreso media');
         } else {
             puntaje += 5;
-            detalles.push('❌ Alta relación deuda/ingreso');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#6d2b2b">cancel</i> Alta relación deuda/ingreso');
         }
 
         // 3. Plazo del crédito
         if (cuotas <= 12) {
             puntaje += 15;
-            detalles.push('✅ Plazo corto (menos riesgo)');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#2b6d47">check_circle</i> Plazo corto (menos riesgo)');
         } else if (cuotas <= 24) {
             puntaje += 10;
-            detalles.push('⚠️ Plazo medio');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#b8860b">warning</i> Plazo medio');
         } else {
             puntaje += 5;
-            detalles.push('❌ Plazo largo (mayor riesgo)');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#6d2b2b">cancel</i> Plazo largo (mayor riesgo)');
         }
 
         // 4. BCRA (si hay datos)
@@ -129,28 +129,28 @@
 
             if (situacionNormal || situacionRiesgo === false) {
                 puntaje += 25;
-                detalles.push('✅ Sin deudas problemáticas en BCRA');
+                detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#2b6d47">check_circle</i> Sin deudas problemáticas en BCRA');
             } else if (situacionRiesgo && !situacionIrrecuperable) {
                 puntaje += 10;
-                detalles.push('⚠️ Con seguimiento especial en BCRA');
+                detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#b8860b">warning</i> Con seguimiento especial en BCRA');
             } else if (situacionIrrecuperable) {
                 puntaje += 0;
-                detalles.push('❌ Situación irrecuperable en BCRA');
+                detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#6d2b2b">cancel</i> Situación irrecuperable en BCRA');
             }
         } else {
-            detalles.push('⚠️ Sin información de BCRA (revisar manualmente)');
+            detalles.push('<i class="material-icons" style="font-size:16px;vertical-align:middle;color:#b8860b">warning</i> Sin información de BCRA (revisar manualmente)');
         }
 
         // Decisión final
         if (puntaje >= 70) {
             recomendacion = 'aprobada';
-            mensaje = '✅ Crédito recomendado. Excelente perfil financiero.';
+            mensaje = '<i class="material-icons" style="font-size:18px;vertical-align:middle;color:#2b6d47">check_circle</i> Crédito recomendado. Excelente perfil financiero.';
         } else if (puntaje >= 45) {
             recomendacion = 'precaución';
-            mensaje = '⚠️ Crédito con precaución. Evaluar manualmente.';
+            mensaje = '<i class="material-icons" style="font-size:18px;vertical-align:middle;color:#b8860b">warning</i> Crédito con precaución. Evaluar manualmente.';
         } else {
             recomendacion = 'rechazada';
-            mensaje = '❌ Crédito no recomendado. Alto riesgo.';
+            mensaje = '<i class="material-icons" style="font-size:18px;vertical-align:middle;color:#6d2b2b">cancel</i> Crédito no recomendado. Alto riesgo.';
         }
 
         return {
@@ -330,10 +330,10 @@
         const evaluacion = solicitud.evaluacion || evaluarCredito(solicitud);
         
         const statusLabel = {
-            'aprobada': '✅ Aprobada',
-            'rechazada': '❌ Rechazada',
-            'precaución': '⚠️ Precaución',
-            'pendiente': '⏳ Pendiente'
+            'aprobada': '<i class="material-icons" style="font-size:16px;vertical-align:middle">check_circle</i> Aprobada',
+            'rechazada': '<i class="material-icons" style="font-size:16px;vertical-align:middle">cancel</i> Rechazada',
+            'precaución': '<i class="material-icons" style="font-size:16px;vertical-align:middle">warning</i> Precaución',
+            'pendiente': '<i class="material-icons" style="font-size:16px;vertical-align:middle">hourglass_top</i> Pendiente'
         }[evaluacion.recomendacion] || 'Pendiente';
 
         const statusClass = evaluacion.recomendacion;
@@ -405,7 +405,7 @@
             </div>
 
             <div class="bcra-info">
-                <strong>📋 Consulta BCRA:</strong>
+                <strong><i class="material-icons" style="font-size:18px;vertical-align:middle;color:#ffb347">description</i> Consulta BCRA:</strong>
                 ${solicitud.bcra_consulta || 'Sin información disponible'}
             </div>
         `;
@@ -424,7 +424,6 @@
         // Enlaces
         const whatsappLink = telefonoWhatsApp ? `https://wa.me/${telefonoWhatsApp}?text=${mensajeCodificado}` : '#';
         const emailLink = solicitud.email ? `mailto:${solicitud.email}?subject=Solicitud de crédito - Financiera Astro&body=${encodeURIComponent(mensajeWhatsApp)}` : '#';
-        const telefonoLink = solicitud.telefono ? `tel:${solicitud.telefono}` : '#';
 
         modalFooter.innerHTML = `
             <a href="${whatsappLink}" target="_blank" class="btn-contacto btn-whatsapp" ${!telefonoWhatsApp ? 'style="opacity:0.5; pointer-events:none;"' : ''}>
@@ -432,9 +431,6 @@
             </a>
             <a href="${emailLink}" class="btn-contacto" style="background: #ffb347; color: #0b0d11;">
                 <i class="material-icons">email</i> Email
-            </a>
-            <a href="${telefonoLink}" class="btn-contacto" style="background: #1e232b; color: #eef1f5; border: 1px solid #2d3440;">
-                <i class="material-icons">phone</i> Llamar
             </a>
             <button class="btn-modal-close" id="modalCloseBtn2">Cerrar</button>
         `;
@@ -507,8 +503,56 @@
     });
 
     // ============================================================
+    // DATOS DE EJEMPLO
+    // ============================================================
+
+    function seedEjemplos() {
+        const solicitudes = getSolicitudes();
+        if (solicitudes.length > 0) return;
+
+        const ejemplos = [
+            {
+                id: 'ejemplo-aprobado',
+                fecha: '2025-06-28T10:30:00.000Z',
+                nombre: 'María García',
+                email: 'maria.garcia@ejemplo.com',
+                telefono: '1123456789',
+                cuil: '27123456789',
+                ingreso_mensual: '850000',
+                gasto_vivienda: '120000',
+                otros_gastos: '50000',
+                monto_solicitado: '500000',
+                plazo_cuotas: '12',
+                bcra_consulta: 'Titular: María García\n\n--- SITUACIÓN CREDITICIA ---\n\nPeríodo: 2025-05\n  Entidad: Banco Nacional\n  Situación: Situación Normal\n  Monto: $150.000\n  ---',
+                evaluacion: null
+            },
+            {
+                id: 'ejemplo-rechazado',
+                fecha: '2025-06-29T14:20:00.000Z',
+                nombre: 'Carlos López',
+                email: 'carlos.lopez@ejemplo.com',
+                telefono: '1159876543',
+                cuil: '20345678901',
+                ingreso_mensual: '300000',
+                gasto_vivienda: '180000',
+                otros_gastos: '90000',
+                monto_solicitado: '2000000',
+                plazo_cuotas: '24',
+                bcra_consulta: 'Titular: Carlos López\n\n--- SITUACIÓN CREDITICIA ---\n\nPeríodo: 2025-05\n  Entidad: Banco Provincial\n  Situación: Con problemas - Riesgo medio\n  Monto: $800.000\n  Días de atraso: 120\n  ---\n\nPeríodo: 2025-04\n  Entidad: Financiera XYZ\n  Situación: Irrecuperable\n  Monto: $350.000\n  ---',
+                evaluacion: null
+            }
+        ];
+
+        saveSolicitudes(ejemplos);
+        console.log('[Financiera Astro] Ejemplos de solicitudes agregados');
+    }
+
+    // ============================================================
     // INICIALIZACIÓN
     // ============================================================
+    
+    // Sembrar datos de ejemplo si no hay solicitudes
+    seedEjemplos();
     
     // Renderizar solicitudes al cargar
     renderSolicitudes();
@@ -518,7 +562,7 @@
         renderSolicitudes();
     }, 30000);
 
-    console.log('📊 Dashboard Financiera Astro cargado correctamente');
-    console.log(`📋 ${getSolicitudes().length} solicitudes en total`);
+    console.log('[Financiera Astro] Dashboard cargado correctamente');
+    console.log(`[Financiera Astro] ${getSolicitudes().length} solicitudes en total`);
 
 })();
