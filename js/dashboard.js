@@ -33,7 +33,7 @@
     const modalBody = document.getElementById('modalBody');
     const modalFooter = document.getElementById('modalFooter');
     const modalClose = document.getElementById('modalClose');
-    const modalCloseBtn = document.getElementById('modalCloseBtn2');
+    // modalCloseBtn2 se asigna dinámicamente en abrirModal
 
     // ============================================================
     // FUNCIONES PRINCIPALES
@@ -497,7 +497,6 @@
 
     // Cerrar modal
     modalClose.addEventListener('click', cerrarModal);
-    if (modalCloseBtn) modalCloseBtn.addEventListener('click', cerrarModal);
     modal.addEventListener('click', function(e) {
         if (e.target === this) cerrarModal();
     });
