@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Administrativo · Financiera Astro</title>
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+<div class="dashboard-container">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="material-icons">stars</i>
+            <span>Financiera <span>Astro</span></span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="active" data-section="solicitudes">
+                <i class="material-icons">inbox</i>
+                Solicitudes
+                <span class="badge" id="totalBadge">0</span>
+            </a>
+            <a href="#" data-section="estadisticas">
+                <i class="material-icons">analytics</i>
+                Estadísticas
+            </a>
+            <a href="#" data-section="configuracion">
+                <i class="material-icons">settings</i>
+                Configuración
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <span class="credits">Demo · David Ferreyra</span>
+        </div>
+    </aside>
+    
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <h1 id="sectionTitle">Solicitudes</h1>
+            <div class="header-actions">
+                <button class="btn-refresh" id="btnRefresh">
+                    <i class="material-icons">refresh</i>
+                    Actualizar
+                </button>
+                <span class="last-update" id="lastUpdate">Última actualización: hace un momento</span>
+            </div>
+        </header>
+        
+        <!-- SECCIÓN SOLICITUDES -->
+        <section id="sectionSolicitudes" class="dashboard-section active">
+            <div class="solicitudes-grid" id="solicitudesGrid">
+                <!-- Las solicitudes se cargan dinámicamente desde localStorage -->
+                <div class="empty-state">
+                    <i class="material-icons">inbox</i>
+                    <h3>No hay solicitudes aún</h3>
+                    <p>Las solicitudes de crédito aparecerán aquí cuando los clientes las envíen.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECCIÓN ESTADÍSTICAS -->
+        <section id="sectionEstadisticas" class="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="material-icons">people</i>
+                    <div class="stat-info">
+                        <h3 id="totalSolicitudes">0</h3>
+                        <p>Total solicitudes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="material-icons">check_circle</i>
+                    <div class="stat-info">
+                        <h3 id="totalAprobadas">0</h3>
+                        <p>Aprobadas</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="material-icons">cancel</i>
+                    <div class="stat-info">
+                        <h3 id="totalRechazadas">0</h3>
+                        <p>Rechazadas</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="material-icons">hourglass_top</i>
+                    <div class="stat-info">
+                        <h3 id="totalPendientes">0</h3>
+                        <p>Pendientes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Recomendaciones por solicitud</h3>
+                <div class="chart-bars" id="chartBars">
+                    <!-- Las barras se generan dinámicamente -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECCIÓN CONFIGURACIÓN (placeholder) -->
+        <section id="sectionConfiguracion" class="dashboard-section">
+            <div class="config-card">
+                <h3><i class="material-icons">info</i> Acerca del panel</h3>
+                <p>Este es un panel administrativo demo para Financiera Astro.</p>
+                <ul>
+                    <li><strong>Total de solicitudes:</strong> <span id="configTotal">0</span></li>
+                    <li><strong>Última actualización:</strong> <span id="configLastUpdate">-</span></li>
+                    <li><strong>Versión:</strong> 1.0.0</li>
+                </ul>
+                <button class="btn-danger" id="btnLimpiarDatos">
+                    <i class="material-icons">delete_forever</i>
+                    Limpiar todos los datos
+                </button>
+            </div>
+        </section>
+        
+    </main>
+</div>
+
+<!-- Modal para ver detalle de solicitud -->
+<div class="modal" id="detailModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="material-icons">description</i> Detalle de solicitud</h2>
+            <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Contenido dinámico -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal-close" id="modalCloseBtn">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

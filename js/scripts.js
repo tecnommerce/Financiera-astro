@@ -1,6 +1,5 @@
 /**
- * Financiera Astro
- * Script principal para la evaluación crediticia
+ * Financiera Astro - Landing Pública
  * Autor: David Ferreyra
  */
 
@@ -11,9 +10,8 @@
     // CONFIGURACIÓN
     // ============================================================
     
-    // ⚠️ REEMPLAZÁ ESTA URL CON LA QUE TE DÉ FORMSPREE ⚠️
-    // Si la que te dieron no funciona, andá a formspree.io y creá una nueva sin registro
     const FORMSPREE_URL = 'https://formspree.io/f/xbdvzlqd';
+    const STORAGE_KEY = 'financiera_astro_solicitudes';
 
     // ============================================================
     // DOM ELEMENTS
@@ -39,9 +37,38 @@
         }
     }
 
-    // Event listeners para los botones "Solicitar crédito"
     btnHeaderCta.addEventListener('click', toggleForm);
     btnHeroCta.addEventListener('click', toggleForm);
+
+    // ============================================================
+    // FUNCIÓN: GUARDAR EN LOCALSTORAGE
+    // ============================================================
+    
+    function guardarSolicitud(datos, bcraInfo) {
+        try {
+            // Obtener solicitudes existentes
+            const existing = localStorage.getItem(STORAGE_KEY);
+            const solicitudes = existing ? JSON.parse(existing) : [];
+            
+            // Crear nueva solicitud
+            const nuevaSolicitud = {
+                id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+                fecha: new Date().toISOString(),
+                ...datos,
+                bcra_consulta: bcraInfo,
+                evaluacion: null // Se evaluará en el dashboard
+            };
+            
+            solicitudes.push(nuevaSolicitud);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(solicitudes));
+            
+            console.log('✅ Solicitud guardada en localStorage');
+            return true;
+        } catch (error) {
+            console.error('Error al guardar solicitud:', error);
+            return false;
+        }
+    }
 
     // ============================================================
     // FUNCIÓN: CONSULTAR BCRA
@@ -58,9 +85,7 @@
             const url = `https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/${cuilLimpio}`;
             const response = await fetch(url, {
                 method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
+                headers: { 'Accept': 'application/json' }
             });
 
             if (!response.ok) {
@@ -78,7 +103,7 @@
 
         } catch (error) {
             console.error('Error al consultar BCRA:', error);
-            return { error: 'No se pudo conectar con la API del BCRA. Verifica tu conexión a internet.' };
+            return { error: 'No se pudo conectar con la API del BCRA.' };
         }
     }
 
@@ -88,7 +113,7 @@
     
     function formatearInfoBCRA(bcraData) {
         if (!bcraData || !bcraData.results) {
-            return 'No se encontraron datos en la Central de Deudores del BCRA para esta identificación.';
+            return 'No se encontraron datos en la Central de Deudores del BCRA.';
         }
 
         const results = bcraData.results;
@@ -210,10 +235,7 @@
             return;
         }
 
-        // ============================================================
         // 1. CONSULTAR BCRA
-        // ============================================================
-        
         let bcraInfo = 'No se pudo consultar la Central de Deudores del BCRA.';
         
         try {
@@ -227,10 +249,24 @@
             bcraInfo = `Error: ${err.message}`;
         }
 
-        // ============================================================
-        // 2. CONSTRUIR CUERPO DEL MAIL
-        // ============================================================
-        
+        // 2. CONSTRUIR DATOS PARA GUARDAR Y ENVIAR
+        const datosCliente = {
+            nombre,
+            email,
+            telefono,
+            cuil: cuilLimpio,
+            ingreso_mensual: ingreso,
+            gasto_vivienda: gastoVivienda,
+            otros_gastos: otrosGastos || '0',
+            monto_solicitado: montoSolicitado,
+            plazo_cuotas: plazo,
+            bcra_consulta: bcraInfo
+        };
+
+        // 3. GUARDAR EN LOCALSTORAGE (para el dashboard)
+        const guardado = guardarSolicitud(datosCliente, bcraInfo);
+
+        // 4. CONSTRUIR CUERPO DEL MAIL
         const fecha = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
         
         const cuerpoMail = `
@@ -265,10 +301,7 @@ Por favor, contactar al solicitante para continuar con el proceso de evaluación
 ========================================
 `;
 
-        // ============================================================
-        // 3. PREPARAR DATOS PARA FORMSPREE
-        // ============================================================
-        
+        // 5. PREPARAR DATOS PARA FORMSPREE
         const datosMail = {
             _subject: `Nueva solicitud de crédito - ${nombre}`,
             nombre: nombre,
@@ -286,23 +319,21 @@ Por favor, contactar al solicitante para continuar con el proceso de evaluación
             _gotcha: ''
         };
 
-        // ============================================================
-        // 4. ENVIAR MAIL
-        // ============================================================
-        
+        // 6. ENVIAR MAIL
         const resultadoMail = await enviarMail(datosMail);
 
         // Restaurar botón
         btnEnviar.disabled = false;
         btnEnviar.innerHTML = '<i class="material-icons">send</i> Enviar solicitud';
 
-        if (resultadoMail.success) {
+        if (resultadoMail.success && guardado) {
             successMsg.classList.add('visible');
             form.reset();
+            console.log('✅ Solicitud completada exitosamente');
         } else {
-            errorText.textContent = `Error al enviar: ${resultadoMail.error}. Por favor, intentá nuevamente.`;
+            errorText.textContent = `Error al enviar: ${resultadoMail.error || 'No se pudo guardar'}. Por favor, intentá nuevamente.`;
             errorMsg.classList.add('visible');
         }
     });
 
-})(); // Fin del IIFE
+})();
