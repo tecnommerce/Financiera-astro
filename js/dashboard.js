@@ -1,6 +1,7 @@
 /**
  * Dashboard Administrativo - Financiera Astro
  * Autor: David Ferreyra
+ * Versión: 1.0.0
  */
 
 (function() {
@@ -30,6 +31,7 @@
     const btnLimpiarDatos = document.getElementById('btnLimpiarDatos');
     const modal = document.getElementById('detailModal');
     const modalBody = document.getElementById('modalBody');
+    const modalFooter = document.getElementById('modalFooter');
     const modalClose = document.getElementById('modalClose');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
 
@@ -177,6 +179,10 @@
                     <p>Las solicitudes de crédito aparecerán aquí cuando los clientes las envíen.</p>
                 </div>
             `;
+            actualizarContadores();
+            actualizarEstadisticas();
+            renderChart();
+            updateLastUpdate();
             return;
         }
 
@@ -194,6 +200,13 @@
                 'pendiente': 'Pendiente'
             }[evaluacion.recomendacion] || 'Pendiente';
 
+            // Construir número de WhatsApp
+            const telefonoLimpio = (solicitud.telefono || '').replace(/\D/g, '');
+            const telefonoWhatsApp = telefonoLimpio ? `54${telefonoLimpio}` : '';
+            const mensajeWhatsApp = `Hola ${solicitud.nombre || ''}, soy de Financiera Astro. Vi tu solicitud de crédito por $${Number(solicitud.monto_solicitado || 0).toLocaleString('es-AR')} en ${solicitud.plazo_cuotas || 0} cuotas. ¿Podemos coordinar una reunión para avanzar con la evaluación?`;
+            const mensajeCodificado = encodeURIComponent(mensajeWhatsApp);
+            const whatsappLink = telefonoWhatsApp ? `https://wa.me/${telefonoWhatsApp}?text=${mensajeCodificado}` : '#';
+
             return `
                 <div class="solicitud-card" data-id="${solicitud.id}">
                     <div class="header">
@@ -206,8 +219,14 @@
                         · <strong>Ingreso:</strong> $${Number(solicitud.ingreso_mensual || 0).toLocaleString('es-AR')}
                     </div>
                     <div class="footer">
-                        <span class="status-badge ${statusClass}">${statusLabel}</span>
-                        <span class="recomendacion-badge ${statusClass}">${evaluacion.mensaje}</span>
+                        <div class="footer-left">
+                            <span class="status-badge ${statusClass}">${statusLabel}</span>
+                            <span class="recomendacion-badge ${statusClass}">${evaluacion.mensaje}</span>
+                        </div>
+                        <a href="${whatsappLink}" target="_blank" class="whatsapp-btn" ${!telefonoWhatsApp ? 'style="opacity:0.5; pointer-events:none;"' : ''}>
+                            <i class="material-icons" style="font-size: 16px;">whatsapp</i>
+                            Contactar
+                        </a>
                     </div>
                 </div>
             `;
@@ -215,7 +234,11 @@
 
         // Event listeners para abrir detalle
         document.querySelectorAll('.solicitud-card').forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', function(e) {
+                // Evitar que el click en el botón de WhatsApp abra el modal
+                if (e.target.closest('.whatsapp-btn')) {
+                    return;
+                }
                 const id = this.dataset.id;
                 const solicitudes = getSolicitudes();
                 const solicitud = solicitudes.find(s => s.id === id);
@@ -299,7 +322,7 @@
     }
 
     // ============================================================
-    // MODAL DE DETALLE
+    // MODAL DE DETALLE (CON BOTÓN DE WHATSAPP)
     // ============================================================
     
     function abrirModal(solicitud) {
@@ -314,6 +337,9 @@
         }[evaluacion.recomendacion] || 'Pendiente';
 
         const statusClass = evaluacion.recomendacion;
+
+        // Construir el mensaje para WhatsApp
+        const mensajeWhatsApp = `Hola ${solicitud.nombre || ''}, soy de Financiera Astro. Vi tu solicitud de crédito por $${Number(solicitud.monto_solicitado || 0).toLocaleString('es-AR')} en ${solicitud.plazo_cuotas || 0} cuotas. ¿Podemos coordinar una reunión para avanzar con la evaluación?`;
 
         modalBody.innerHTML = `
             <div class="info-row">
@@ -384,13 +410,30 @@
             </div>
         `;
 
-        // Botones de contacto en el footer del modal
-        const modalFooter = document.querySelector('.modal-footer');
+        // ============================================================
+        // GENERAR BOTONES DEL FOOTER (CON WHATSAPP)
+        // ============================================================
+        
+        // Número de teléfono (eliminar caracteres no numéricos)
+        const telefonoLimpio = (solicitud.telefono || '').replace(/\D/g, '');
+        const telefonoWhatsApp = telefonoLimpio ? `54${telefonoLimpio}` : ''; // Asumimos Argentina (54)
+        
+        // Texto del mensaje codificado para URL
+        const mensajeCodificado = encodeURIComponent(mensajeWhatsApp);
+        
+        // Enlaces
+        const whatsappLink = telefonoWhatsApp ? `https://wa.me/${telefonoWhatsApp}?text=${mensajeCodificado}` : '#';
+        const emailLink = solicitud.email ? `mailto:${solicitud.email}?subject=Solicitud de crédito - Financiera Astro&body=${encodeURIComponent(mensajeWhatsApp)}` : '#';
+        const telefonoLink = solicitud.telefono ? `tel:${solicitud.telefono}` : '#';
+
         modalFooter.innerHTML = `
-            <a href="mailto:${solicitud.email || ''}" class="btn-contacto">
-                <i class="material-icons">email</i> Enviar email
+            <a href="${whatsappLink}" target="_blank" class="btn-contacto btn-whatsapp" ${!telefonoWhatsApp ? 'style="opacity:0.5; pointer-events:none;"' : ''}>
+                <i class="material-icons">whatsapp</i> WhatsApp
             </a>
-            <a href="tel:${solicitud.telefono || ''}" class="btn-contacto">
+            <a href="${emailLink}" class="btn-contacto" style="background: #ffb347; color: #0b0d11;">
+                <i class="material-icons">email</i> Email
+            </a>
+            <a href="${telefonoLink}" class="btn-contacto" style="background: #1e232b; color: #eef1f5; border: 1px solid #2d3440;">
                 <i class="material-icons">phone</i> Llamar
             </a>
             <button class="btn-modal-close" id="modalCloseBtn2">Cerrar</button>

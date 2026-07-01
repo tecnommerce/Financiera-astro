@@ -624,3 +624,77 @@ body {
         margin: 10px;
     }
 }
+/* ===== BOTÓN WHATSAPP ===== */
+.btn-whatsapp {
+    background: #25D366 !important;
+    color: #fff !important;
+}
+
+.btn-whatsapp:hover {
+    background: #1da851 !important;
+    transform: scale(1.02);
+}
+
+.btn-whatsapp i {
+    color: #fff !important;
+}
+
+/* Estilo para los botones de contacto en el modal */
+.modal-footer .btn-contacto {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-footer .btn-contacto:hover {
+    transform: scale(1.02);
+}
+
+/* ===== TARJETA DE SOLICITUD CON BOTÓN WHATSAPP ===== */
+.solicitud-card .whatsapp-btn {
+    background: #25D366;
+    color: #fff;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: 0.2s;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+}
+
+.solicitud-card .whatsapp-btn:hover {
+    background: #1da851;
+    transform: scale(1.05);
+}
+
+.solicitud-card .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #1e232b;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.solicitud-card .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
